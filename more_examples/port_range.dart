@@ -5,7 +5,7 @@
  * See LICENSE for distribution and usage details.
  */
 
-import 'package:ping_discover_network_plus/ping_discover_network.dart';
+import 'package:ping_discover_network_plus/ping_discover_network_plus.dart';
 
 void checkPortRange(String subnet, int fromPort, int toPort) {
   if (fromPort > toPort) {

@@ -4,7 +4,7 @@
  * 
  * See LICENSE for distribution and usage details.
  */
-import 'package:ping_discover_network_plus/ping_discover_network.dart';
+import 'package:ping_discover_network_plus/ping_discover_network_plus.dart';
 
 /// Discover available network devices in a given subnet on a given port
 void main() async {
