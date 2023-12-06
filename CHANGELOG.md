@@ -1,3 +1,6 @@
+## [0.0.4]
+Improve points - latest sdk version
+
 ## [0.0.3]
 Improve points - latest sdk version
 
