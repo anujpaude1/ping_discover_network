@@ -1,10 +1,11 @@
 name: ping_discover_network_plus
 description: Library that allows to ping IP subnet and discover network devices. Could be used to find printers and other devices and services in a local network.
-version: 0.0.4
+version: 0.0.5
 homepage: https://github.com/brasizza/ping_discover_network
 
 environment:
   sdk: ">=3.2.0 <4.0.0"
+  flutter: ">=1.17.0"
 
 dependencies:
   flutter:
