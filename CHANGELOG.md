@@ -1,3 +1,6 @@
+## [0.0.2]
+Improve points
+
 ## [0.0.1]
  * The 'ping_discover_network' package in Flutter was originally designed to facilitate network discovery and pinging functionality within Flutter applications. However, when a package is marked as deprecated, it means that the developers behind the package no longer recommend its use. This decision might be due to various reasons, such as:
 

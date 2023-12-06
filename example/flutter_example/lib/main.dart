@@ -49,7 +49,8 @@ class MyHomePageState extends State<MyHomePage> {
       ip = (await WifiInfoPlugin.wifiDetails)?.ipAddress ?? 'NO IP DETECTED';
       log('local ip:\t$ip');
     } catch (e) {
-      const snackBar = SnackBar(content: Text('WiFi is not connected', textAlign: TextAlign.center));
+      const snackBar = SnackBar(
+          content: Text('WiFi is not connected', textAlign: TextAlign.center));
       scaffoldMessage.showSnackBar(snackBar);
       return;
     }
@@ -84,7 +85,8 @@ class MyHomePageState extends State<MyHomePage> {
         });
       })
       ..onError((dynamic e) {
-        const snackBar = SnackBar(content: Text('Unexpected exception', textAlign: TextAlign.center));
+        const snackBar = SnackBar(
+            content: Text('Unexpected exception', textAlign: TextAlign.center));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       });
   }
@@ -111,11 +113,17 @@ class MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Text('Local ip: $localIp', style: const TextStyle(fontSize: 16)),
+                Text('Local ip: $localIp',
+                    style: const TextStyle(fontSize: 16)),
                 const SizedBox(height: 15),
-                ElevatedButton(onPressed: isDiscovering ? null : () => discover(context), child: Text(isDiscovering ? 'Discovering...' : 'Discover')),
+                ElevatedButton(
+                    onPressed: isDiscovering ? null : () => discover(context),
+                    child: Text(isDiscovering ? 'Discovering...' : 'Discover')),
                 const SizedBox(height: 15),
-                found >= 0 ? Text('Found: $found device(s)', style: const TextStyle(fontSize: 16)) : Container(),
+                found >= 0
+                    ? Text('Found: $found device(s)',
+                        style: const TextStyle(fontSize: 16))
+                    : Container(),
                 Expanded(
                   child: ListView.builder(
                     itemCount: devices.length,
@@ -132,7 +140,8 @@ class MyHomePageState extends State<MyHomePage> {
                                 const SizedBox(width: 10),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Text(
