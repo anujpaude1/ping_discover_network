@@ -17,12 +17,13 @@ class NetworkAddress {
   String ip;
 }
 
-/// Pings a given subnet (xxx.xxx.xxx) on a given port using [discover] method.
 class NetworkAnalyzer {
-  /// Pings a given [subnet] (xxx.xxx.xxx) on a given [port].
-  ///
-  /// Pings IP:PORT one by one
-  static Stream<NetworkAddress> discover(
+  // Avoid self instance
+  NetworkAnalyzer._();
+  static NetworkAnalyzer? _instance;
+  static NetworkAnalyzer get i => _instance ??= NetworkAnalyzer._();
+
+  Stream<NetworkAddress> discover(
     String subnet,
     int port, {
     Duration timeout = const Duration(milliseconds: 400),
@@ -30,7 +31,6 @@ class NetworkAnalyzer {
     if (port < 1 || port > 65535) {
       throw 'Incorrect port';
     }
-    // TODO : validate subnet
 
     for (int i = 1; i < 256; ++i) {
       final host = '$subnet.$i';
@@ -45,7 +45,7 @@ class NetworkAnalyzer {
         }
 
         // Check if connection timed out or we got one of predefined errors
-        if (e.osError == null || _errorCodes.contains(e.osError.errorCode)) {
+        if (e.osError == null || _errorCodes.contains(e.osError?.errorCode ?? 0)) {
           yield NetworkAddress(host, false);
         } else {
           // Error 23,24: Too many open files in system
@@ -58,7 +58,7 @@ class NetworkAnalyzer {
   /// Pings a given [subnet] (xxx.xxx.xxx) on a given [port].
   ///
   /// Pings IP:PORT all at once
-  static Stream<NetworkAddress> discover2(
+  Stream<NetworkAddress> discover2(
     String subnet,
     int port, {
     Duration timeout = const Duration(seconds: 5),
@@ -66,7 +66,6 @@ class NetworkAnalyzer {
     if (port < 1 || port > 65535) {
       throw 'Incorrect port';
     }
-    // TODO : validate subnet
 
     final out = StreamController<NetworkAddress>();
     final futures = <Future<Socket>>[];
@@ -83,7 +82,7 @@ class NetworkAnalyzer {
         }
 
         // Check if connection timed out or we got one of predefined errors
-        if (e.osError == null || _errorCodes.contains(e.osError.errorCode)) {
+        if (e.osError == null || _errorCodes.contains(e.osError?.errorCode ?? 0)) {
           out.sink.add(NetworkAddress(host, false));
         } else {
           // Error 23,24: Too many open files in system
@@ -92,14 +91,12 @@ class NetworkAnalyzer {
       });
     }
 
-    Future.wait<Socket>(futures)
-        .then<void>((sockets) => out.close())
-        .catchError((dynamic e) => out.close());
+    Future.wait<Socket>(futures).then<void>((sockets) => out.close()).catchError((dynamic e) => out.close());
 
     return out.stream;
   }
 
-  static Future<Socket> _ping(String host, int port, Duration timeout) {
+  Future<Socket> _ping(String host, int port, Duration timeout) {
     return Socket.connect(host, port, timeout: timeout).then((socket) {
       return socket;
     });
@@ -114,5 +111,5 @@ class NetworkAnalyzer {
   // 111: Connection refused
   // 113: No route to host
   // <empty>: SocketException: Connection timed out
-  static final _errorCodes = [13, 49, 61, 64, 65, 101, 111, 113];
+  final _errorCodes = [13, 49, 61, 64, 65, 101, 111, 113];
 }

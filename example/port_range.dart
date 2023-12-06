@@ -4,7 +4,8 @@
  * 
  * See LICENSE for distribution and usage details.
  */
-import 'package:ping_discover_network/ping_discover_network.dart';
+
+import 'package:ping_discover_network_plus/ping_discover_network.dart';
 
 void checkPortRange(String subnet, int fromPort, int toPort) {
   if (fromPort > toPort) {
@@ -12,7 +13,7 @@ void checkPortRange(String subnet, int fromPort, int toPort) {
   }
 
   print('port $fromPort');
-  final stream = NetworkAnalyzer.discover(subnet, fromPort);
+  final stream = NetworkAnalyzer.i.discover(subnet, fromPort);
 
   stream.listen((NetworkAddress addr) {
     if (addr.exists) {

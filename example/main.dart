@@ -4,7 +4,7 @@
  * 
  * See LICENSE for distribution and usage details.
  */
-import 'package:ping_discover_network/ping_discover_network.dart';
+import 'package:ping_discover_network_plus/ping_discover_network.dart';
 
 /// Discover available network devices in a given subnet on a given port
 void main() async {
@@ -12,7 +12,7 @@ void main() async {
   // NetworkAnalyzer.discover2 pings all PORT:IP addresses at once.
 
   const port = 80;
-  final stream = NetworkAnalyzer.discover2(
+  final stream = NetworkAnalyzer.i.discover2(
     '192.168.0',
     port,
     timeout: Duration(milliseconds: 5000),

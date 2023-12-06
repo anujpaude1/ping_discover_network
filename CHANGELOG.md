@@ -1,17 +1,8 @@
-## [0.2.0]
-* Two pinging methods: ping ip addresses one by one OR all at once.
+## [0.0.1]
+ * The 'ping_discover_network' package in Flutter was originally designed to facilitate network discovery and pinging functionality within Flutter applications. However, when a package is marked as deprecated, it means that the developers behind the package no longer recommend its use. This decision might be due to various reasons, such as:
 
-## [0.1.3]
-* Ping ip addresses one by one
+Outdated Functionality: The package might have become outdated and may not work reliably with newer versions of Flutter or might have issues when used in certain scenarios.
 
-## [0.1.2]
-* Added Flutter example: get the local ip and ping the subnet
+Security Concerns: There could be security vulnerabilities identified within the package that cannot be adequately addressed or might pose risks in certain contexts.
 
-## [0.1.0] - [0.1.1] 
-* Ping IP subnet on a given port
-* Added example: ping ports range
-* Added documentation
-
-## [0.0.1] - [0.0.2] 
-
-* Initial release
+Maintenance Concerns: The developers might not have the resources or intention to keep the package updated with the latest Flutter versions, which could lead to compatibility issues or lack of support for new features introduced in newer Flutter releases.
