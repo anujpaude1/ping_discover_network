@@ -1,8 +1,8 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:ping_discover_network_plus/ping_discover_network_plus.dart';
-import 'package:wifi_info_plugin_plus/wifi_info_plugin_plus.dart';
 
 void main() => runApp(const MyApp());
 
@@ -35,6 +35,30 @@ class MyHomePageState extends State<MyHomePage> {
   int found = -1;
   TextEditingController portController = TextEditingController(text: '80');
 
+  Future<String?> getLocalIpAddress() async {
+    try {
+      final interfaces = await NetworkInterface.list(
+        includeLoopback: false,
+        type: InternetAddressType.IPv4,
+      );
+
+      for (var interface in interfaces) {
+        for (var addr in interface.addresses) {
+          // Filter for IPv4 addresses and exclude loopback
+          if (addr.type == InternetAddressType.IPv4 &&
+              !addr.isLoopback &&
+              addr.address.startsWith('192.168.')) {
+            return addr.address;
+          }
+        }
+      }
+      return null;
+    } catch (e) {
+      log('Error getting local IP: $e');
+      return null;
+    }
+  }
+
   void discover(BuildContext ctx) async {
     final scaffoldMessage = ScaffoldMessenger.of(context);
 
@@ -44,18 +68,26 @@ class MyHomePageState extends State<MyHomePage> {
       found = -1;
     });
 
-    String ip;
+    String? ip;
     try {
-      ip = (await WifiInfoPlugin.wifiDetails)?.ipAddress ?? 'NO IP DETECTED';
+      ip = await getLocalIpAddress();
+      if (ip == null) {
+        throw Exception('No valid local IP found');
+      }
       log('local ip:\t$ip');
     } catch (e) {
       const snackBar = SnackBar(
-          content: Text('WiFi is not connected', textAlign: TextAlign.center));
+          content: Text('Failed to get local IP address',
+              textAlign: TextAlign.center));
       scaffoldMessage.showSnackBar(snackBar);
+      setState(() {
+        isDiscovering = false;
+      });
       return;
     }
+
     setState(() {
-      localIp = ip;
+      localIp = ip!;
     });
 
     final String subnet = ip.substring(0, ip.lastIndexOf('.'));
