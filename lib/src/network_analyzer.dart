@@ -34,22 +34,16 @@ class NetworkAnalyzer {
 
     for (int i = 1; i < 256; ++i) {
       final host = '$subnet.$i';
+      final url = 'ws://$host:$port';
 
       try {
-        final Socket s = await Socket.connect(host, port, timeout: timeout);
-        s.destroy();
+        final WebSocket ws = await _pingWebSocket(url, timeout);
+        await ws.close();
         yield NetworkAddress(host, true);
       } catch (e) {
-        if (!(e is SocketException)) {
-          rethrow;
-        }
-
-        // Check if connection timed out or we got one of predefined errors
-        if (e.osError == null ||
-            _errorCodes.contains(e.osError?.errorCode ?? 0)) {
+        if (e is SocketException || e is WebSocketException) {
           yield NetworkAddress(host, false);
         } else {
-          // Error 23,24: Too many open files in system
           rethrow;
         }
       }
@@ -69,41 +63,33 @@ class NetworkAnalyzer {
     }
 
     final out = StreamController<NetworkAddress>();
-    final futures = <Future<Socket>>[];
+    final futures = <Future<WebSocket>>[];
     for (int i = 1; i < 256; ++i) {
       final host = '$subnet.$i';
-      final Future<Socket> f = _ping(host, port, timeout);
+      final url = 'ws://$host:$port';
+      final Future<WebSocket> f = _pingWebSocket(url, timeout);
       futures.add(f);
-      f.then((socket) {
-        socket.destroy();
+      f.then((ws) {
+        ws.close();
         out.sink.add(NetworkAddress(host, true));
       }).catchError((dynamic e) {
-        if (!(e is SocketException)) {
-          throw e;
-        }
-
-        // Check if connection timed out or we got one of predefined errors
-        if (e.osError == null ||
-            _errorCodes.contains(e.osError?.errorCode ?? 0)) {
+        if (e is SocketException || e is WebSocketException) {
           out.sink.add(NetworkAddress(host, false));
         } else {
-          // Error 23,24: Too many open files in system
           throw e;
         }
       });
     }
 
-    Future.wait<Socket>(futures)
+    Future.wait<WebSocket>(futures)
         .then<void>((sockets) => out.close())
         .catchError((dynamic e) => out.close());
 
     return out.stream;
   }
 
-  Future<Socket> _ping(String host, int port, Duration timeout) {
-    return Socket.connect(host, port, timeout: timeout).then((socket) {
-      return socket;
-    });
+  Future<WebSocket> _pingWebSocket(String url, Duration timeout) {
+    return WebSocket.connect(url).timeout(timeout);
   }
 
   // 13: Connection failed (OS Error: Permission denied)

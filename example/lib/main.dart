@@ -33,7 +33,8 @@ class MyHomePageState extends State<MyHomePage> {
   List<String> devices = [];
   bool isDiscovering = false;
   int found = -1;
-  TextEditingController portController = TextEditingController(text: '80');
+  TextEditingController portController = TextEditingController(
+      text: '8080'); // Changed default port to common WebSocket port
 
   Future<String?> getLocalIpAddress() async {
     try {
@@ -91,7 +92,7 @@ class MyHomePageState extends State<MyHomePage> {
     });
 
     final String subnet = ip.substring(0, ip.lastIndexOf('.'));
-    int port = 80;
+    int port = 8080; // Changed default port
     try {
       port = int.parse(portController.text);
     } catch (e) {
@@ -127,7 +128,7 @@ class MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Discover Local Network'),
+        title: const Text('Discover WebSocket Devices'), // Updated title
       ),
       body: Builder(
         builder: (BuildContext context) {
